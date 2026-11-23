@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -373,11 +375,15 @@ fun ObsSceneStudioScreen(
         )
     }
 
-    Column(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+        val maxCanvasHeight = (maxHeight * 0.30f).coerceIn(120.dp, 220.dp)
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
         if (onBack != null) {
             ProSubpageTopBar(
                 title = "Scene Studio",
@@ -529,7 +535,8 @@ fun ObsSceneStudioScreen(
                 onCropLayerEdge = onCropLayerEdge,
                 onDragFinished = onDragFinished,
                 onReconnectPeer = onReconnectPeer,
-                beforePreviewLayerId = if (beforePreviewActive && dockTab == StudioDockTab.GRAPHICS) selectedLayer?.id else null
+                beforePreviewLayerId = if (beforePreviewActive && dockTab == StudioDockTab.GRAPHICS) selectedLayer?.id else null,
+                modifier = Modifier.heightIn(max = maxCanvasHeight)
             )
         }
 
@@ -1364,6 +1371,7 @@ fun ObsSceneStudioScreen(
                     }
                 }
             }
+        }
         }
     }
 }

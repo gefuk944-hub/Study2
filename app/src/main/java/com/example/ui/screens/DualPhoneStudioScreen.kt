@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -420,49 +421,40 @@ fun DualPhoneStudioScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(10.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                                .padding(horizontal = 8.dp, vertical = 6.dp),
+                            verticalArrangement = Arrangement.spacedBy(5.dp)
                         ) {
-                            // Preview Header
+                            // Compact Preview Header
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = "Live Studio Preview — ${activeScene.name}",
-                                        style = MaterialTheme.typography.labelLarge,
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = Color.White,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    Text(
-                                        text = "$screenCaptureName • Cam ${if (workspace.cameraEnabled) "ON" else "OFF"} • Shots $screenshotCount",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        fontFamily = JetBrainsMonoFontFamily,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }
+                                Text(
+                                    text = "Live Studio Preview — ${activeScene.name}",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Color.White,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f)
+                                )
                                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                     OutlinedButton(
                                         onClick = onOpenSceneEditor,
-                                        shape = RoundedCornerShape(6.dp),
-                                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
-                                        modifier = Modifier.height(28.dp)
+                                        shape = RoundedCornerShape(5.dp),
+                                        contentPadding = PaddingValues(horizontal = 6.dp, vertical = 1.dp),
+                                        modifier = Modifier.height(24.dp)
                                     ) {
-                                        Text("Studio", fontSize = 10.sp)
+                                        Text("Studio", fontSize = 9.sp)
                                     }
                                     OutlinedButton(
                                         onClick = onOpenCameraSettings,
-                                        shape = RoundedCornerShape(6.dp),
-                                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
-                                        modifier = Modifier.height(28.dp)
+                                        shape = RoundedCornerShape(5.dp),
+                                        contentPadding = PaddingValues(horizontal = 6.dp, vertical = 1.dp),
+                                        modifier = Modifier.height(24.dp)
                                     ) {
-                                        Text("Cam", fontSize = 10.sp)
+                                        Text("Cam", fontSize = 9.sp)
                                     }
                                 }
                             }
@@ -470,7 +462,7 @@ fun DualPhoneStudioScreen(
                             // 4-Scene Instant Live Switcher (Screen 1 / Screen 2 / Screen 3 / Screen 4)
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                horizontalArrangement = Arrangement.spacedBy(5.dp)
                             ) {
                                 SceneSlot.entries.forEach { slot ->
                                     val selected = workspace.activeSceneSlot == slot
@@ -479,7 +471,7 @@ fun DualPhoneStudioScreen(
                                         onClick = {
                                             onDispatchRemote(DualRemoteCommand(DualPhoneProtocol.CMD_SWITCH_SCENE, stringArg = slot.name))
                                         },
-                                        shape = RoundedCornerShape(6.dp),
+                                        shape = RoundedCornerShape(5.dp),
                                         color = if (selected) ZroCobalt.copy(alpha = 0.24f) else MaterialTheme.colorScheme.surfaceContainer,
                                         border = BorderStroke(
                                             1.dp,
@@ -489,25 +481,16 @@ fun DualPhoneStudioScreen(
                                             .weight(1f)
                                             .testTag("remote_preview_scene_${slot.name.lowercase()}")
                                     ) {
-                                        Column(
-                                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 5.dp),
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-                                            Text(
-                                                text = slot.shortLabel,
-                                                fontSize = 9.sp,
-                                                fontFamily = JetBrainsMonoFontFamily,
-                                                color = if (selected) ZroCobalt else MaterialTheme.colorScheme.onSurfaceVariant
-                                            )
-                                            Text(
-                                                text = sceneName,
-                                                fontSize = 10.sp,
-                                                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-                                                color = if (selected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis
-                                            )
-                                        }
+                                        Text(
+                                            text = "${slot.shortLabel} • $sceneName",
+                                            fontSize = 9.sp,
+                                            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                                            color = if (selected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+                                        )
                                     }
                                 }
                             }
@@ -529,7 +512,8 @@ fun DualPhoneStudioScreen(
                                 onResizeLayerCorner = onResizeLayerCorner,
                                 onCropLayerEdge = onCropLayerEdge,
                                 onDragFinished = onDragFinished,
-                                onReconnectPeer = onReconnect
+                                onReconnectPeer = onReconnect,
+                                modifier = Modifier.heightIn(max = 152.dp)
                             )
 
                             // Live Layer Edit + Crop + Rename Capture Bar
@@ -537,43 +521,59 @@ fun DualPhoneStudioScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .horizontalScroll(rememberScrollState()),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                horizontalArrangement = Arrangement.spacedBy(5.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                FilterChip(
-                                    selected = editLayersInRemote,
+                                Surface(
                                     onClick = { editLayersInRemote = !editLayersInRemote },
-                                    label = { Text(if (editLayersInRemote) "Edit Layers: ON" else "Edit Layers: OFF", fontSize = 10.sp) },
-                                    leadingIcon = { Icon(Icons.Rounded.Layers, contentDescription = null, modifier = Modifier.size(13.dp)) },
-                                    colors = FilterChipDefaults.filterChipColors(
-                                        selectedContainerColor = ZroCobalt.copy(alpha = 0.24f),
-                                        selectedLabelColor = Color.White
-                                    ),
+                                    shape = RoundedCornerShape(5.dp),
+                                    color = if (editLayersInRemote) ZroCobalt.copy(alpha = 0.24f) else MaterialTheme.colorScheme.surfaceContainer,
+                                    border = BorderStroke(1.dp, if (editLayersInRemote) ZroCobalt else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
                                     modifier = Modifier.testTag("remote_edit_layers_toggle")
-                                )
-                                FilterChip(
-                                    selected = cropModeInRemote && editLayersInRemote,
-                                    enabled = editLayersInRemote,
-                                    onClick = { cropModeInRemote = !cropModeInRemote },
-                                    label = { Text(if (cropModeInRemote) "Crop ON" else "Crop", fontSize = 10.sp) },
-                                    leadingIcon = { Icon(Icons.Rounded.Crop, contentDescription = null, modifier = Modifier.size(13.dp)) },
-                                    colors = FilterChipDefaults.filterChipColors(
-                                        selectedContainerColor = ZroAmber.copy(alpha = 0.24f),
-                                        selectedLabelColor = Color.White
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 7.dp, vertical = 4.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(3.dp)
+                                    ) {
+                                        Icon(Icons.Rounded.Layers, contentDescription = null, tint = Color.White, modifier = Modifier.size(12.dp))
+                                        Text(if (editLayersInRemote) "Edit: ON" else "Edit: OFF", fontSize = 9.sp, color = Color.White)
+                                    }
+                                }
+                                Surface(
+                                    onClick = { if (editLayersInRemote) cropModeInRemote = !cropModeInRemote },
+                                    shape = RoundedCornerShape(5.dp),
+                                    color = if (cropModeInRemote && editLayersInRemote) ZroAmber.copy(alpha = 0.24f) else MaterialTheme.colorScheme.surfaceContainer,
+                                    border = BorderStroke(
+                                        1.dp,
+                                        if (cropModeInRemote && editLayersInRemote) ZroAmber else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
                                     ),
                                     modifier = Modifier.testTag("remote_crop_mode_toggle")
-                                )
-                                OutlinedButton(
-                                    onClick = { showRenameCaptureDialog = true },
-                                    shape = RoundedCornerShape(6.dp),
-                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
-                                    modifier = Modifier
-                                        .height(32.dp)
-                                        .testTag("remote_rename_capture_btn")
                                 ) {
-                                    Icon(Icons.Rounded.Edit, contentDescription = "Rename screen capture", modifier = Modifier.size(13.dp))
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text("Rename Capture", fontSize = 10.sp)
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 7.dp, vertical = 4.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(3.dp)
+                                    ) {
+                                        Icon(Icons.Rounded.Crop, contentDescription = null, tint = Color.White, modifier = Modifier.size(12.dp))
+                                        Text(if (cropModeInRemote) "Crop ON" else "Crop", fontSize = 9.sp, color = Color.White)
+                                    }
+                                }
+                                Surface(
+                                    onClick = { showRenameCaptureDialog = true },
+                                    shape = RoundedCornerShape(5.dp),
+                                    color = MaterialTheme.colorScheme.surfaceContainer,
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
+                                    modifier = Modifier.testTag("remote_rename_capture_btn")
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 7.dp, vertical = 4.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(3.dp)
+                                    ) {
+                                        Icon(Icons.Rounded.Edit, contentDescription = "Rename screen capture", tint = Color.White, modifier = Modifier.size(12.dp))
+                                        Text("Capture: $screenCaptureName", fontSize = 9.sp, color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                    }
                                 }
                             }
 

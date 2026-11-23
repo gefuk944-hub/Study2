@@ -7,6 +7,7 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
@@ -127,9 +128,8 @@ class CropMergeRemotePreviewTest {
         composeRule.onNodeWithTag("nav_studio").assertIsDisplayed().performClick()
         composeRule.waitForIdle()
 
-        // Toggle canvas Crop mode in toolbar
-        composeRule.onNodeWithTag("obs_studio_list").performScrollToNode(hasTestTag("studio_crop_mode_btn"))
-        composeRule.onNodeWithTag("studio_crop_mode_btn").performClick()
+        // Toggle canvas Crop mode in horizontal toolbar
+        composeRule.onNodeWithTag("studio_crop_mode_btn").performScrollTo().performClick()
         composeRule.waitForIdle()
 
         // Rename Screen Capture via dialog
@@ -187,12 +187,12 @@ class CropMergeRemotePreviewTest {
         // Tap Scene 2 (Vertical / Shorts) and verify full live preview updates immediately
         composeRule.onNodeWithTag("remote_preview_scene_shorts_vertical").performClick()
         composeRule.waitForIdle()
-        composeRule.onNodeWithText("Live Studio Preview — Vertical Shorts", substring = true).assertIsDisplayed()
+        composeRule.onNodeWithText("Live Studio Preview — Vertical / Shorts", substring = true).assertIsDisplayed()
 
-        // Tap Scene 1 (Gameplay Live) and verify preview switches back immediately
+        // Tap Scene 1 (Gameplay) and verify preview switches back immediately
         composeRule.onNodeWithTag("remote_preview_scene_gameplay_live").performClick()
         composeRule.waitForIdle()
-        composeRule.onNodeWithText("Live Studio Preview — Gameplay Live", substring = true).assertIsDisplayed()
+        composeRule.onNodeWithText("Live Studio Preview — Gameplay", substring = true).assertIsDisplayed()
 
         // Verify interactive Edit Layers & Crop toggles and Rename Capture button are present and functional
         composeRule.onNodeWithTag("remote_edit_layers_toggle").assertIsDisplayed()

@@ -155,7 +155,7 @@ fun StudioCanvasPreview(
         else -> MaterialTheme.colorScheme.outline
     }
 
-    Box(
+    BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
@@ -164,6 +164,8 @@ fun StudioCanvasPreview(
             .padding(4.dp),
         contentAlignment = Alignment.Center
     ) {
+        val outerMaxW = maxWidth.coerceAtLeast(120.dp)
+        val outerMaxH = maxHeight
         AnimatedContent(
             targetState = activeScene,
             contentKey = { it.slot },
@@ -182,10 +184,17 @@ fun StudioCanvasPreview(
             },
             label = "studio_scene_transition"
         ) { scene ->
+            val sceneAspect = if (scene.isVertical) 9f / 16f else 16f / 9f
+            val preferredW = if (scene.isVertical) outerMaxW * 0.56f else outerMaxW
+            val fittedW = if (outerMaxH.value.isFinite() && outerMaxH < 1000.dp) {
+                minOf(preferredW, outerMaxH * sceneAspect)
+            } else {
+                preferredW
+            }
             BoxWithConstraints(
                 modifier = Modifier
-                    .fillMaxWidth(if (scene.isVertical) 0.56f else 1f)
-                    .aspectRatio(aspect)
+                    .width(fittedW)
+                    .aspectRatio(sceneAspect)
                     .scale(workspace.canvasZoom.coerceIn(0.65f, 2.0f))
                     .clip(RoundedCornerShape(4.dp))
                     .background(Color(0xFF0B0E14))
